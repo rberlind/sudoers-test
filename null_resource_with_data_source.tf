@@ -9,21 +9,15 @@ variable "name" {
 
 variable "filename" {
   description = "file name"
-  default = "name.txt"
+  default = "README.md"
 }
 
 resource "null_resource" "write_file" {
-  /*provisioner "local-exec" {
-    command = "cp ${var.filename} ~/temp.txt"
-  }*/
+  provisioner "local-exec" {
+    command = "cp ${var.filename} README.txt"
+  }
   provisioner "local-exec" {
     command = "echo ${var.name} > ${var.filename}"
-  }
-  provisioner "local-exec" {
-    command = "pwd"
-  }
-  provisioner "local-exec" {
-    command = "ls"
   }
   triggers {
     name = "${var.name}"
@@ -32,16 +26,15 @@ resource "null_resource" "write_file" {
 
 data "null_data_source" "read_file" {
   inputs = {
-    #name = "${file("${var.filename}")}"
-    name = "Roger"
+    name = "${file("${var.filename}")}"
   }
   depends_on = ["null_resource.write_file"]
 }
 
 resource "null_resource" "restore_sudoers" {
-  /*provisioner "local-exec" {
-    command = "cp ~/temp.txt ~"
-  }*/
+  provisioner "local-exec" {
+    command = "cp README.txt README.md"
+  }
   # This is just to make sure that restore_sudoers is done after read_file
   provisioner "local-exec" {
     command = "echo ${data.null_data_source.read_file.outputs["name"]}"
