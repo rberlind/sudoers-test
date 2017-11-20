@@ -13,9 +13,9 @@ variable "filename" {
 }
 
 resource "null_resource" "write_file" {
-  provisioner "local-exec" {
+  /*provisioner "local-exec" {
     command = "cp ${var.filename} ~/temp.txt"
-  }
+  }*/
   provisioner "local-exec" {
     command = "echo ${var.name} > ${var.filename}"
   }
@@ -39,9 +39,9 @@ data "null_data_source" "read_file" {
 }
 
 resource "null_resource" "restore_sudoers" {
-  provisioner "local-exec" {
-    command = "cp ~/temp.txt ${var.filename}"
-  }
+  /*provisioner "local-exec" {
+    command = "cp ~/temp.txt ~"
+  }*/
   # This is just to make sure that restore_sudoers is done after read_file
   provisioner "local-exec" {
     command = "echo ${data.null_data_source.read_file.outputs["name"]}"
